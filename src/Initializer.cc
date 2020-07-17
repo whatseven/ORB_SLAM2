@@ -20,13 +20,15 @@
 
 #include "Initializer.h"
 
-#include "Thirdparty/DBoW2/DUtils/Random.h"
+//#include "Thirdparty/DBoW2/DUtils/Random.h"
+
+#include <random>
 
 #include "Optimizer.h"
 #include "ORBmatcher.h"
 
 #include<thread>
-
+using namespace std;
 namespace ORB_SLAM2
 {
 
@@ -77,7 +79,6 @@ bool Initializer::Initialize(const Frame &CurrentFrame, const vector<int> &vMatc
     // Generate sets of 8 points for each RANSAC iteration
     mvSets = vector< vector<size_t> >(mMaxIterations,vector<size_t>(8,0));
 
-    DUtils::Random::SeedRandOnce(0);
 
     for(int it=0; it<mMaxIterations; it++)
     {
@@ -86,7 +87,9 @@ bool Initializer::Initialize(const Frame &CurrentFrame, const vector<int> &vMatc
         // Select a minimum set
         for(size_t j=0; j<8; j++)
         {
-            int randi = DUtils::Random::RandomInt(0,vAvailableIndices.size()-1);
+            std::mt19937 mt;
+            std::uniform_int<int> u(0, vAvailableIndices.size() - 1);
+            int randi = u(mt);
             int idx = vAvailableIndices[randi];
 
             mvSets[it][j] = idx;

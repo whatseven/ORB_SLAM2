@@ -22,14 +22,15 @@
 #include "Sim3Solver.h"
 
 #include <vector>
+#include <random>
 #include <cmath>
 #include <opencv2/core/core.hpp>
 
 #include "KeyFrame.h"
 #include "ORBmatcher.h"
 
-#include "Thirdparty/DBoW2/DUtils/Random.h"
-
+//#include "Thirdparty/DBoW2/DUtils/Random.h"
+using namespace std;
 namespace ORB_SLAM2
 {
 
@@ -165,7 +166,9 @@ cv::Mat Sim3Solver::iterate(int nIterations, bool &bNoMore, vector<bool> &vbInli
         // Get min set of points
         for(short i = 0; i < 3; ++i)
         {
-            int randi = DUtils::Random::RandomInt(0, vAvailableIndices.size()-1);
+            std::mt19937 mt;
+            std::uniform_int<int> u(0, vAvailableIndices.size() - 1);
+            int randi = u(mt);
 
             int idx = vAvailableIndices[randi];
 
@@ -214,7 +217,7 @@ cv::Mat Sim3Solver::find(vector<bool> &vbInliers12, int &nInliers)
 
 void Sim3Solver::ComputeCentroid(cv::Mat &P, cv::Mat &Pr, cv::Mat &C)
 {
-    cv::reduce(P,C,1,CV_REDUCE_SUM);
+    cv::reduce(P,C,1,cv::REDUCE_SUM);
     C = C/P.cols;
 
     for(int i=0; i<P.cols; i++)

@@ -60,16 +60,16 @@ namespace ORB_SLAM2
 
 class PnPsolver {
  public:
-  PnPsolver(const Frame &F, const vector<MapPoint*> &vpMapPointMatches);
+  PnPsolver(const Frame &F, const std::vector<MapPoint*> &vpMapPointMatches);
 
   ~PnPsolver();
 
   void SetRansacParameters(double probability = 0.99, int minInliers = 8 , int maxIterations = 300, int minSet = 4, float epsilon = 0.4,
                            float th2 = 5.991);
 
-  cv::Mat find(vector<bool> &vbInliers, int &nInliers);
+  cv::Mat find(std::vector<bool> &vbInliers, int &nInliers);
 
-  cv::Mat iterate(int nIterations, bool &bNoMore, vector<bool> &vbInliers, int &nInliers);
+  cv::Mat iterate(int nIterations, bool &bNoMore, std::vector<bool> &vbInliers, int &nInliers);
 
  private:
 
@@ -93,16 +93,16 @@ class PnPsolver {
 
   void choose_control_points(void);
   void compute_barycentric_coordinates(void);
-  void fill_M(CvMat * M, const int row, const double * alphas, const double u, const double v);
+  void fill_M(cv::Mat M, const int row, const double * alphas, const double u, const double v);
   void compute_ccs(const double * betas, const double * ut);
   void compute_pcs(void);
 
   void solve_for_sign(void);
 
-  void find_betas_approx_1(const CvMat * L_6x10, const CvMat * Rho, double * betas);
-  void find_betas_approx_2(const CvMat * L_6x10, const CvMat * Rho, double * betas);
-  void find_betas_approx_3(const CvMat * L_6x10, const CvMat * Rho, double * betas);
-  void qr_solve(CvMat * A, CvMat * b, CvMat * X);
+  void find_betas_approx_1(const cv::Mat L_6x10, const cv::Mat Rho, double * betas);
+  void find_betas_approx_2(const cv::Mat L_6x10, const cv::Mat Rho, double * betas);
+  void find_betas_approx_3(const cv::Mat L_6x10, const cv::Mat Rho, double * betas);
+  void qr_solve(cv::Mat A, cv::Mat b, cv::Mat X);
 
   double dot(const double * v1, const double * v2);
   double dist2(const double * p1, const double * p2);
@@ -110,9 +110,9 @@ class PnPsolver {
   void compute_rho(double * rho);
   void compute_L_6x10(const double * ut, double * l_6x10);
 
-  void gauss_newton(const CvMat * L_6x10, const CvMat * Rho, double current_betas[4]);
+  void gauss_newton(const cv::Mat L_6x10, const cv::Mat Rho, double current_betas[4]);
   void compute_A_and_b_gauss_newton(const double * l_6x10, const double * rho,
-				    double cb[4], CvMat * A, CvMat * b);
+				    double cb[4], cv::Mat A, cv::Mat b);
 
   double compute_R_and_t(const double * ut, const double * betas,
 			 double R[3][3], double t[3]);
@@ -134,41 +134,41 @@ class PnPsolver {
   double cws[4][3], ccs[4][3];
   double cws_determinant;
 
-  vector<MapPoint*> mvpMapPointMatches;
+  std::vector<MapPoint*> mvpMapPointMatches;
 
   // 2D Points
-  vector<cv::Point2f> mvP2D;
-  vector<float> mvSigma2;
+  std::vector<cv::Point2f> mvP2D;
+  std::vector<float> mvSigma2;
 
   // 3D Points
-  vector<cv::Point3f> mvP3Dw;
+  std::vector<cv::Point3f> mvP3Dw;
 
   // Index in Frame
-  vector<size_t> mvKeyPointIndices;
+  std::vector<size_t> mvKeyPointIndices;
 
   // Current Estimation
   double mRi[3][3];
   double mti[3];
   cv::Mat mTcwi;
-  vector<bool> mvbInliersi;
+  std::vector<bool> mvbInliersi;
   int mnInliersi;
 
   // Current Ransac State
   int mnIterations;
-  vector<bool> mvbBestInliers;
+  std::vector<bool> mvbBestInliers;
   int mnBestInliers;
   cv::Mat mBestTcw;
 
   // Refined
   cv::Mat mRefinedTcw;
-  vector<bool> mvbRefinedInliers;
+  std::vector<bool> mvbRefinedInliers;
   int mnRefinedInliers;
 
   // Number of Correspondences
   int N;
 
   // Indices for random selection [0 .. N-1]
-  vector<size_t> mvAllIndices;
+  std::vector<size_t> mvAllIndices;
 
   // RANSAC probability
   double mRansacProb;
@@ -189,7 +189,7 @@ class PnPsolver {
   int mRansacMinSet;
 
   // Max square error associated with scale level. Max error = th*th*sigma(level)*sigma(level)
-  vector<float> mvMaxError;
+  std::vector<float> mvMaxError;
 
 };
 

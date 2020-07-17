@@ -25,6 +25,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include<mutex>
+using namespace std;
 
 namespace ORB_SLAM2
 {
@@ -72,7 +73,7 @@ cv::Mat FrameDrawer::DrawFrame()
     } // destroy scoped mutex -> release mutex
 
     if(im.channels()<3) //this should be always true
-        cvtColor(im,im,CV_GRAY2BGR);
+        cvtColor(im,im,cv::COLOR_GRAY2BGR);
 
     //Draw
     if(state==Tracking::NOT_INITIALIZED) //INITIALIZING
