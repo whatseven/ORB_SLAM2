@@ -22,20 +22,15 @@
 #define FRAMEDRAWER_H
 
 #include "Tracking.h"
-#include "MapPoint.h"
 #include "Map.h"
 
 #include<opencv2/core/core.hpp>
-#include<opencv2/features2d/features2d.hpp>
 
 #include<mutex>
 
 
 namespace ORB_SLAM2
 {
-
-class Tracking;
-class Viewer;
 
 class FrameDrawer
 {
