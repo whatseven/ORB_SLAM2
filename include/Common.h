@@ -7,7 +7,7 @@
 #include <time.h>
 #endif
 
-void override_sleep(float micro_seconds)
+inline void override_sleep(float micro_seconds)
 {
 #ifdef _WIN32
     _sleep(micro_seconds);

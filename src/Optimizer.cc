@@ -24,7 +24,6 @@
 #include <g2o/core/robust_kernel_impl.h>
 #include <g2o/core/optimization_algorithm_levenberg.h>
 #include <g2o/types/slam3d/se3quat.h>
-#include <g2o/solvers/cholmod/linear_solver_cholmod.h>
 #include <g2o/solvers/eigen/linear_solver_eigen.h>
 #include <g2o/solvers/dense/linear_solver_dense.h>
 #include <g2o/types/sba/types_six_dof_expmap.h>
@@ -52,12 +51,9 @@ namespace ORB_SLAM2 {
         vbNotIncludedMP.resize(vpMP.size());
 
         g2o::SparseOptimizer optimizer;
-        g2o::BlockSolver_6_3::LinearSolverType* linearSolver;
-        linearSolver = new g2o::LinearSolverCholmod<g2o::BlockSolver_6_3::PoseMatrixType>();
-
-        g2o::BlockSolver_6_3* solver_ptr = new g2o::BlockSolver_6_3(linearSolver);
-
-        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    	
+        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(g2o::make_unique<g2o::BlockSolver_6_3>(
+            g2o::make_unique<g2o::LinearSolverEigen<g2o::BlockSolver_6_3::PoseMatrixType>>()));
         optimizer.setAlgorithm(solver);
 
         if (pbStopFlag)
@@ -221,13 +217,8 @@ namespace ORB_SLAM2 {
 
     int Optimizer::PoseOptimization(Frame* pFrame) {
         g2o::SparseOptimizer optimizer;
-        g2o::BlockSolver_6_3::LinearSolverType* linearSolver;
-
-        linearSolver = new g2o::LinearSolverDense<g2o::BlockSolver_6_3::PoseMatrixType>();
-
-        g2o::BlockSolver_6_3* solver_ptr = new g2o::BlockSolver_6_3(linearSolver);
-
-        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(g2o::make_unique<g2o::BlockSolver_6_3>(
+            g2o::make_unique<g2o::LinearSolverEigen<g2o::BlockSolver_6_3::PoseMatrixType>>()));
         optimizer.setAlgorithm(solver);
 
         int nInitialCorrespondences = 0;
@@ -467,13 +458,8 @@ namespace ORB_SLAM2 {
 
         // Setup optimizer
         g2o::SparseOptimizer optimizer;
-        g2o::BlockSolver_6_3::LinearSolverType* linearSolver;
-
-        linearSolver = new g2o::LinearSolverEigen<g2o::BlockSolver_6_3::PoseMatrixType>();
-
-        g2o::BlockSolver_6_3* solver_ptr = new g2o::BlockSolver_6_3(linearSolver);
-
-        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(g2o::make_unique<g2o::BlockSolver_6_3>(
+            g2o::make_unique<g2o::LinearSolverEigen<g2o::BlockSolver_6_3::PoseMatrixType>>()));
         optimizer.setAlgorithm(solver);
 
         if (pbStopFlag)
@@ -728,10 +714,8 @@ namespace ORB_SLAM2 {
         // Setup optimizer
         g2o::SparseOptimizer optimizer;
         optimizer.setVerbose(false);
-        g2o::BlockSolver_7_3::LinearSolverType* linearSolver =
-            new g2o::LinearSolverEigen<g2o::BlockSolver_7_3::PoseMatrixType>();
-        g2o::BlockSolver_7_3* solver_ptr = new g2o::BlockSolver_7_3(linearSolver);
-        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(g2o::make_unique<g2o::BlockSolver_7_3>(
+            g2o::make_unique<g2o::LinearSolverEigen<g2o::BlockSolver_7_3::PoseMatrixType>>()));
 
         solver->setUserLambdaInit(1e-16);
         optimizer.setAlgorithm(solver);
@@ -971,13 +955,8 @@ namespace ORB_SLAM2 {
 
     int Optimizer::OptimizeSim3(KeyFrame* pKF1, KeyFrame* pKF2, vector<MapPoint*>& vpMatches1, g2o::Sim3& g2oS12, const float th2, const bool bFixScale) {
         g2o::SparseOptimizer optimizer;
-        g2o::BlockSolverX::LinearSolverType* linearSolver;
-
-        linearSolver = new g2o::LinearSolverDense<g2o::BlockSolverX::PoseMatrixType>();
-
-        g2o::BlockSolverX* solver_ptr = new g2o::BlockSolverX(linearSolver);
-
-        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+        g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(g2o::make_unique<g2o::BlockSolverX>(
+            g2o::make_unique<g2o::LinearSolverEigen<g2o::BlockSolverX::PoseMatrixType>>()));
         optimizer.setAlgorithm(solver);
 
         // Calibration
